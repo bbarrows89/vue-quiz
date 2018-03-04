@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
+    <h2>Test your trivia knowledge with 10 questions from a chosen category.</h2>
     <ul>
       <li>
         <a
@@ -85,7 +84,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Quiz',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'

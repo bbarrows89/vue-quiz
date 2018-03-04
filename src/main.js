@@ -6,7 +6,7 @@ import router from './router'
 import VueLocalStorage from 'vue-ls'
 
 let options = {
-  namespace: 'weather__'
+  namespace: 'trivia__'
 }
 
 Vue.use(VueLocalStorage, options)
