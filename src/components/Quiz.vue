@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h2>Test your trivia knowledge with 10 questions from a chosen category.</h2>
-    
+    <load-spinner v-if="showLoading"></load-spinner>
   </div>
 </template>
 
@@ -17,7 +17,9 @@ export default {
   },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      categories: [],
+      questions: [],
+      showLoading: false
     }
   }
 }
