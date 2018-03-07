@@ -11,8 +11,7 @@
       <option selected value="currentCategory">{{currentCategory.name}}</option>
       <option v-for="category in categories" :value="category" :key="category.id">{{category.name}}</option>
     </select>
-    <p>Selected category: </p>
-    <p>{{ currentCategory.name }}</p>
+    <p>You've chosen to answer {{numQuestions}} questions from the {{currentCategory.name}} category.</p>
   </div>
 </template>
 
