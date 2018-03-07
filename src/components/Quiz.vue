@@ -1,15 +1,15 @@
 <template>
-  <div class="hello">
+  <div class="quiz">
     <span>Test your trivia knowledge with</span>
     <select v-model="numQuestions">
       <option disabled value="">Please select a number</option>
-      <option v-for="n in 20" :value="n">{{n}}</option>
+      <option v-for="n in 20" :value="n" :key="n">{{n}}</option>
       </select>
     <span>questions from a chosen category.</span>
     <load-spinner v-if="showLoading"></load-spinner>
     <select v-if="categories" v-model="currentCategory">
       <option selected value="currentCategory">{{currentCategory.name}}</option>
-      <option v-for="category in categories" :value="category">{{category.name}}</option>
+      <option v-for="category in categories" :value="category" :key="category.id">{{category.name}}</option>
     </select>
     <p>Selected category: </p>
     <p>{{ currentCategory.name }}</p>
