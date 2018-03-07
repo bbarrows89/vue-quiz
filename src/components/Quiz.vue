@@ -1,12 +1,18 @@
 <template>
   <div class="hello">
-    <h2>Test your trivia knowledge with 10 questions from a chosen category.</h2>
+    <span>Test your trivia knowledge with</span>
+    <select v-model="numQuestions">
+      <option disabled value="">Please select a number</option>
+      <option v-for="n in 20" :value="n">{{n}}</option>
+      </select>
+    <span>questions from a chosen category.</span>
     <load-spinner v-if="showLoading"></load-spinner>
-    <select v-model="currentCategory">
-      <option disabled value="">Please select one</option>
-      <option v-for="category in categories" :key="category.id"></option>
+    <select v-if="categories" v-model="currentCategory">
+      <option selected value="currentCategory">{{currentCategory.name}}</option>
+      <option v-for="category in categories" :value="category">{{category.name}}</option>
     </select>
-    <span>Selected: {{ currentCategory }}</span>
+    <p>Selected category: </p>
+    <p>{{ currentCategory.name }}</p>
   </div>
 </template>
 
@@ -27,22 +33,22 @@ export default {
         id: 9
       },
       questions: [], // current list of game questions
+      numQuestions: 10,
       messages: [],
       showLoading: false // flag for showing CubeSpinner while loading
     }
   },
   created () {
     // check to see if user has trivia categories cached.
-    let cacheExpiry = 1000 * 60 * 60 * 24 * 365 // cache expires after 1 year
     if (this.$ls.get('categories')) {
       this.categories = this.$ls.get('categories')
     } else {
       console.log('No cache available. Making API call')
       API.get('https://opentdb.com/api_category.php')
         .then(response => {
-          this.$ls.set(response.data, cacheExpiry)
+          this.$ls.set(response.data.trivia_categories)
           console.log('Categories have been retrieved and cached.')
-          this.categories = response.data
+          this.categories = response.data.trivia_categories
           this.showLoading = false
         })
         .catch(error => {
