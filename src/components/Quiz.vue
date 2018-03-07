@@ -41,12 +41,14 @@ export default {
   created () {
     // check to see if user has trivia categories cached.
     if (this.$ls.get('categories')) {
+      console.log('Cached categories found.')
       this.categories = this.$ls.get('categories')
     } else {
       console.log('No cache available. Making API call')
+      this.showLoading = true
       API.get('https://opentdb.com/api_category.php')
         .then(response => {
-          this.$ls.set(response.data.trivia_categories)
+          this.$ls.set('categories', response.data)
           console.log('Categories have been retrieved and cached.')
           this.categories = response.data.trivia_categories
           this.showLoading = false
