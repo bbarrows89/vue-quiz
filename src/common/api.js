@@ -7,8 +7,8 @@ export const API = axios.create({
 })
 
 API.interceptors.request.use(function (config) {
-    // Set common parameters for each request to the API.
-  return config;
+  // Set common parameters for each request to the API.
+  return config
 }, function (error) {
-  return Promise.reject(error);
-});
+  return Promise.reject(error)
+})

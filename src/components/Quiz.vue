@@ -2,6 +2,11 @@
   <div class="hello">
     <h2>Test your trivia knowledge with 10 questions from a chosen category.</h2>
     <load-spinner v-if="showLoading"></load-spinner>
+    <select v-model="currentCategory">
+      <option disabled value="">Please select one</option>
+      <option v-for="category in categories" :key="category.id"></option>
+    </select>
+    <span>Selected: {{ currentCategory }}</span>
   </div>
 </template>
 
@@ -19,9 +24,9 @@ export default {
       categories: [],
       currentCategory: { // chosen category (defaults to Random)
         name: 'Random',
-        id: 9,
+        id: 9
       },
-      questions: [], //current list of game questions
+      questions: [], // current list of game questions
       messages: [],
       showLoading: false // flag for showing CubeSpinner while loading
     }
@@ -29,28 +34,28 @@ export default {
   created () {
     // check to see if user has trivia categories cached.
     let cacheExpiry = 1000 * 60 * 60 * 24 * 365 // cache expires after 1 year
-    if (this.$ls.get('categories')){
-      this.categories = this.$ls.get('categories');
+    if (this.$ls.get('categories')) {
+      this.categories = this.$ls.get('categories')
     } else {
-      console.log('No cache available. Making API call');
+      console.log('No cache available. Making API call')
       API.get('https://opentdb.com/api_category.php')
-      .then(response => {
-        this.$ls.set(response.data, cacheExpiry);
-        console.log('Categories have been retrieved and cached.');
-        this.categories = response.data;
-        this.showLoading = false;
-      })
-      .catch(error => {
-        this.messages.push({
-          type: 'error',
-          text: error.message
-        });
-        this.showLoading = false;
-      });
+        .then(response => {
+          this.$ls.set(response.data, cacheExpiry)
+          console.log('Categories have been retrieved and cached.')
+          this.categories = response.data
+          this.showLoading = false
+        })
+        .catch(error => {
+          this.messages.push({
+            type: 'error',
+            text: error.message
+          })
+          this.showLoading = false
+        })
     }
   },
   methods: {
-    
+
   }
 }
 </script>
