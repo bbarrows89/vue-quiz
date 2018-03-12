@@ -46,7 +46,7 @@ export default {
     // check to see if user has trivia categories cached.
     if (this.$ls.get('categories')) {
       console.log('Cached categories found.')
-      this.categories = this.$ls.get('categories').trivia_categories
+      this.categories = this.$ls.get('categories')
     } else {
       console.log('No cache available. Making API call')
       this.showLoading = true
@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     getCatNameFromId: function () {
-      console.log(this.currentCategory)
+      console.log('currrent category: ' + this.currentCategory)
       let searchId = this.currentCategory
       let found = this.categories.find(function (element) {
         return element.id === searchId
