@@ -2,7 +2,7 @@
   <div class="quiz">
     <span>Test your trivia knowledge with</span>
     <select v-model="numQuestions">
-      <option selected disabled value="">Please select a number</option>
+      <option selected disabled value="0">Please select a number</option>
       <option v-for="n in 20" :value="n" :key="n">{{n}}</option>
     </select>
     <select v-model="difficulty">
@@ -14,11 +14,11 @@
     <span>questions from the following categories: </span>
     <load-spinner v-if="showLoading"></load-spinner>
     <select v-if="categories" v-model="currentCategory">
-      <option selected disabled value="">categories.</option>
-      <option value="currentCategory">{{currentCategory.name}}</option>
-      <option v-for="category in categories" :value="category" :key="category.id">{{currentCategory.name}}</option>
+      <option v-for="category in categories" :value="category.id"
+      :key="category.id">{{category.name}}</option>
     </select>
-    <p>You've chosen to answer {{numQuestions}} {{difficulty}} difficulty questions from the: <br> {{currentCategory.name}} category.</p>
+    <p>You've chosen to answer {{numQuestions}} {{difficulty}} difficulty
+    questions from the: <br> {{getCatNameFromId}} category.</p>
   </div>
 </template>
 
@@ -34,13 +34,10 @@ export default {
   data () {
     return {
       categories: null,
-      currentCategory: { // chosen category (defaults to Random)
-        name: 'Random',
-        id: 9
-      },
+      currentCategory: 9, // default to random category
       difficulty: '',
       questions: [], // current list of game questions
-      numQuestions: 10,
+      numQuestions: 0,
       messages: [],
       showLoading: false // flag for showing CubeSpinner while loading
     }
@@ -49,7 +46,7 @@ export default {
     // check to see if user has trivia categories cached.
     if (this.$ls.get('categories')) {
       console.log('Cached categories found.')
-      this.categories = this.$ls.get('categories')
+      this.categories = this.$ls.get('categories').trivia_categories
     } else {
       console.log('No cache available. Making API call')
       this.showLoading = true
@@ -72,6 +69,16 @@ export default {
   methods: {
     getQuestions: function (event) {
 
+    }
+  },
+  computed: {
+    getCatNameFromId: function () {
+      console.log(this.currentCategory)
+      let searchId = this.currentCategory
+      let found = this.categories.find(function (element) {
+        return element.id === searchId
+      })
+      return found.name
     }
   }
 }
