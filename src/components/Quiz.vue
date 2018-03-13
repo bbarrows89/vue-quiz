@@ -20,14 +20,20 @@
     <form v-on:submit.prevent="getQuestions">
       <p>You've chosen to answer {{numQuestions}} {{difficulty}} difficulty
     questions from the: <br> {{getCatNameFromId}} category.</p>
-      <button type="submit">Play now!</button>
+      <button v-if="ready" type="submit">Play now!</button>
     </form>
+    <ul v-if="errors.length > 0" class="errors">
+      <li v-for="error of errors" :key='error.id'>
+        {{error.message}}
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import {API} from '@/common/api'
 import CubeSpinner from '@/components/CubeSpinner'
+import axios from 'axios'
 
 export default {
   name: 'Quiz',
@@ -42,7 +48,8 @@ export default {
       questions: [], // current list of game questions
       numQuestions: 0,
       messages: [],
-      showLoading: false, // flag for showing CubeSpinner while loading      
+      showLoading: false, // flag for showing CubeSpinner while loading
+      errors: []
     }
   },
   created () {
@@ -71,13 +78,16 @@ export default {
   },
   methods: {
     getQuestions: function (event) {
-      let category = this.currentCategory;
-      let difficulty = this.difficulty;
-      let numQuestions = this.numQuestions;
+      let category = this.currentCategory
+      let difficulty = this.difficulty
+      let numQuestions = this.numQuestions
 
-      API.get(`'//opentdb.com/api.php?amount=${numQuestions}&category=${currentCategory}&difficulty=${difficulty}'`)
+      axios.get(`https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}`)
         .then(response => {
-          this.questions = response.data.results
+          this.questions = response.data
+        })
+        .catch(error => {
+          this.errors.push(error)
         })
     }
   },
@@ -91,7 +101,9 @@ export default {
       return found.name
     },
     ready: function () {
-      if (difficulty && numQuestions && currentCategory) {}
+      if (this.difficulty && this.numQuestions && this.currentCategory) {
+        return true
+      }
     }
   }
 }
