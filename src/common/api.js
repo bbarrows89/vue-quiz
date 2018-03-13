@@ -3,7 +3,7 @@
 import axios from 'axios'
 
 export const API = axios.create({
-  baseURL: '//https://opentdb.com/api.php?amount=10'
+  baseURL: '//https://opentdb.com/api.php?'
 })
 
 API.interceptors.request.use(function (config) {

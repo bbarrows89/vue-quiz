@@ -17,8 +17,11 @@
       <option v-for="category in categories" :value="category.id"
       :key="category.id">{{category.name}}</option>
     </select>
-    <p>You've chosen to answer {{numQuestions}} {{difficulty}} difficulty
+    <form v-on:submit.prevent="getQuestions">
+      <p>You've chosen to answer {{numQuestions}} {{difficulty}} difficulty
     questions from the: <br> {{getCatNameFromId}} category.</p>
+      <button type="submit">Play now!</button>
+    </form>
   </div>
 </template>
 
@@ -39,7 +42,7 @@ export default {
       questions: [], // current list of game questions
       numQuestions: 0,
       messages: [],
-      showLoading: false // flag for showing CubeSpinner while loading
+      showLoading: false, // flag for showing CubeSpinner while loading      
     }
   },
   created () {
@@ -68,7 +71,14 @@ export default {
   },
   methods: {
     getQuestions: function (event) {
+      let category = this.currentCategory;
+      let difficulty = this.difficulty;
+      let numQuestions = this.numQuestions;
 
+      API.get(`'//opentdb.com/api.php?amount=${numQuestions}&category=${currentCategory}&difficulty=${difficulty}'`)
+        .then(response => {
+          this.questions = response.data.results
+        })
     }
   },
   computed: {
@@ -79,6 +89,9 @@ export default {
         return element.id === searchId
       })
       return found.name
+    },
+    ready: function () {
+      if (difficulty && numQuestions && currentCategory) {}
     }
   }
 }
