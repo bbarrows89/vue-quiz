@@ -18,9 +18,13 @@
       :key="category.id">{{category.name}}</option>
     </select>
     <form v-on:submit.prevent="getQuestions">
-      <p>You've chosen to answer {{numQuestions}} {{difficulty}} difficulty
+      <p>You've chosen to answer {{numQuestions}} {{difficulty}}
     questions from the: <br> {{getCatNameFromId}} category.</p>
-      <button v-if="ready" type="submit">Play now!</button>
+      <transition name="bounce"
+      enter-active-class="bounce-enter-active"
+      leave-active-class="bounce-leave-active">
+          <button v-if="ready" type="submit">Play now!</button>
+      </transition>
     </form>
     <ul v-if="errors.length > 0" class="errors">
       <li v-for="error of errors" :key='error.id'>
@@ -34,6 +38,7 @@
 import {API} from '@/common/api'
 import CubeSpinner from '@/components/CubeSpinner'
 import axios from 'axios'
+require('vue2-animate/dist/vue2-animate.min.css')
 
 export default {
   name: 'Quiz',
@@ -47,6 +52,7 @@ export default {
       difficulty: '',
       questions: [], // current list of game questions
       numQuestions: 0,
+      currentQuestion: 0,
       messages: [],
       showLoading: false, // flag for showing CubeSpinner while loading
       errors: []
@@ -124,5 +130,24 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+.bounce-leave-active {
+  animation: bounce-in .5s reverse;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(2.5);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
