@@ -15,7 +15,8 @@
     "vue": "^2.5.16",
     "vue-ls": "^2.4.1",
     "vue-router": "^3.0.1",
-    "vue2-animate": "^1.0.4"
+    "vue2-animate": "^1.0.4",
+    "vuetify": "^1.0.8"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
