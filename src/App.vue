@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <h1>Trivia-matic!</h1>
     <router-view/>
-  </div>
+  </v-app>
 </template>
 
 <script>

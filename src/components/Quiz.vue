@@ -23,7 +23,7 @@
       <transition name="bounce"
       enter-active-class="bounce-enter-active"
       leave-active-class="bounce-leave-active">
-          <button v-if="ready" type="submit">Play now!</button>
+        <v-btn v-if="ready" type="submit" large>Play now!</v-btn>
       </transition>
     </form>
     <ul v-if="errors.length > 0" class="errors">
