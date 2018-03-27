@@ -23,7 +23,7 @@
       <transition name="bounce"
       enter-active-class="bounce-enter-active"
       leave-active-class="bounce-leave-active">
-        <v-btn v-if="ready" type="submit" large>Play now!</v-btn>
+        <v-btn block large v-if="ready" type="submit">Play now!</v-btn>
       </transition>
     </form>
     <ul v-if="errors.length > 0" class="errors">
@@ -43,6 +43,7 @@ require('vue2-animate/dist/vue2-animate.min.css')
 export default {
   name: 'Quiz',
   components: {
+    'Questions': Questions,
     'load-spinner': CubeSpinner
   },
   data () {
@@ -95,7 +96,44 @@ export default {
         .catch(error => {
           this.errors.push(error)
         })
+    },
+
+    startGame: (state, payload) => {
+          // Set questions to payload from http request in startGame action
+          this.questions.results = payload;
+          // Create list of incorrect choices
+          this.questions.results.forEach(el => {
+            el.choices = el.incorrect_answers.reduce((acc, item) => {
+              acc.push({
+                text: item,
+                answer: false,
+                classes: {
+                  incorrect: false
+                }
+              });
+              return acc;
+            }, []);
+            // Add correct answer
+            el.choices.push({
+              text: el.correct_answer,
+              answer: true,
+              classes: {
+                correct: false,
+              }
+            });
+            // Shuffle choices
+            let i = el.choices.length, temp, rand;
+            while (0 !== i) {
+              rand = Math.floor(Math.random() * i);
+              i -= 1;
+              temp = el.choices[i];
+              el.choices[i] = el.choices[rand];
+              el.choices[rand] = temp;
+            }
+          });
     }
+
+
   },
   computed: {
     getCatNameFromId: function () {
@@ -141,13 +179,13 @@ a {
 
 @keyframes bounce-in {
   0% {
-    transform: scale(0);
+    transform: scale(0.5);
   }
   50% {
-    transform: scale(2.5);
+    transform: scale(3);
   }
   100% {
-    transform: scale(1);
+    transform: scale(2.5);
   }
 }
 </style>
