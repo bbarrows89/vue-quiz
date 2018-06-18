@@ -34,18 +34,22 @@
       </li>
     </ul>
     <div v-if="playing">
-      <li v-for="(questionObj,index) in quizQuestions" v-bind:key="index">
-  
-        <p class="questions" v-html="questionObj.question.question"> </p>
+      <form v-on:submit.prevent="checkAnswers">
+        <li v-for="(questionObj,index) in quizQuestions" v-bind:key="index">
+    
+          <p class="questions" v-html="questionObj.question.question"> </p>
 
-        <ul id="answers">
-          <li class="answers" v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
-            <input type="radio" v-bind:value="answer" v-model="picked" >
-            <label for="answer" v-html="answer"></label>
-          </li>
-        </ul> 
-      </li>
+          <ul id="answers">
+            <li class="answers" v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
+              <input type="radio" v-bind:value="answer" v-model="picked">
+              <label for="answer" v-html="answer"></label>
+            </li>
+          </ul> 
+        </li>
+        <v-btn block large v-if="answersPicked" type="submit">Check Answers!</v-btn>
+      </form>
     </div>
+   <!-- <div v-if="></div> will need to display score here once answers checked -->
   </div>
 </template>
 <script>
@@ -142,6 +146,14 @@ export default {
           this.errors.push(error);
       });
     },
+    checkAnswers: function(event) {
+      for (let i = 0; i < numQuestions; i++) {
+        if (this.picked === quizQuestions.correctAnswer) {
+          score =+ 1;
+        }
+      }
+
+    }
   },
   computed: {
     getCatNameFromId: function () {
