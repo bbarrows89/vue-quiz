@@ -67,7 +67,6 @@ export default {
       questions: null, // current list of game questions 
       quizQuestions: null,
       numQuestions: 0,
-      currentQuestion: 0,
       messages: [],
       showLoading: false, // flag for showing CubeSpinner while loading
       errors: []
@@ -167,7 +166,7 @@ export default {
   },
 }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
 .questions {
   font-weight: 700;
