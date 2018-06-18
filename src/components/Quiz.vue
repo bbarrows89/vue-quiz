@@ -40,8 +40,8 @@
           <p class="questions" v-html="questionObj.question.question"> </p>
 
           <ul id="answers">
-            <li class="answers" v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
-              <input type="radio" v-bind:value="answer" v-model="picked">
+            <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
+              <input type="radio" id="(answer,aIndex)" v-bind:value="answer" v-model="answer.picked">
               <label for="answer" v-html="answer"></label>
             </li>
           </ul> 
