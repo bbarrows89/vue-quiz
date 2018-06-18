@@ -22,4 +22,9 @@ export default {
   width: 75%;
   margin: 20px auto;
 }
+
+h1 {
+  color:rgb(28, 146, 219);
+  text-decoration: underline rgb(58, 194, 58);
+}
 </style>

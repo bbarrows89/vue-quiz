@@ -46,7 +46,7 @@
             </li>
           </ul> 
         </li>
-        <v-btn block large v-if="answersPicked" type="submit">Check Answers!</v-btn>
+        <button id="checkAnswers" type="submit">Check Answers!</button>
       </form>
     </div>
    <!-- <div v-if="></div> will need to display score here once answers checked -->
@@ -72,7 +72,8 @@ export default {
       numQuestions: 0,
       messages: [],
       showLoading: false, // flag for showing CubeSpinner while loading
-      errors: []
+      errors: [],
+      score: 0,
     }
   },
   created () {
@@ -138,7 +139,8 @@ export default {
             this.quizQuestions.push({
               correctAnswer: correctAnswer,
               allAnswers: temp,
-              question: this.questions[i]
+              question: this.questions[i],
+              picked: null
             });
           }
         })
@@ -148,11 +150,10 @@ export default {
     },
     checkAnswers: function(event) {
       for (let i = 0; i < numQuestions; i++) {
-        if (this.picked === quizQuestions.correctAnswer) {
+        if (this.quizQuestions[i].picked === quizQuestions[i].correctAnswer) {
           score =+ 1;
         }
       }
-
     }
   },
   computed: {
@@ -182,7 +183,11 @@ export default {
 .questions {
   font-weight: 700;
 }
-
+#checkAnswers {
+  font-size: 175%;
+  background-color:dodgerblue;
+  color: white;
+}
 h1, h2 {
   font-weight: normal;
 }
