@@ -1,31 +1,33 @@
 <template>
   <div class="quiz">
-    <span>Test your trivia knowledge with</span>
-    <select v-model="numQuestions">
-      <option selected disabled value="0">Please select a number</option>
-      <option v-for="n in 20" :value="n" :key="n">{{n}}</option>
-    </select>
-    <select v-model="difficulty">
-      <option selected disabled value="">Select a difficulty</option>
-      <option>easy</option>
-      <option>medium</option>
-      <option>hard</option>
-    </select>
-    <span>questions from the following categories: </span>
-    <load-spinner v-if="showLoading"></load-spinner>
-    <select v-if="categories" v-model="currentCategory">
-      <option v-for="category in categories" :value="category.id"
-      :key="category.id">{{category.name}}</option>
-    </select>
-    <form v-on:submit.prevent="getQuestions">
-      <p>You've chosen to answer {{numQuestions}} {{difficulty}}
-    questions from the: <br> {{getCatNameFromId}} category.</p>
-      <transition name="bounce"
-      enter-active-class="bounce-enter-active"
-      leave-active-class="bounce-leave-active">
-        <v-btn block large v-if="ready" type="submit">Play now!</v-btn>
-      </transition>
-    </form>
+    <div v-if="!playing">
+      <span>Test your trivia knowledge with</span>
+      <select v-model="numQuestions">
+        <option selected disabled value="0">Please select a number</option>
+        <option v-for="n in 20" :value="n" :key="n">{{n}}</option>
+      </select>
+      <select v-model="difficulty">
+        <option selected disabled value="">Select a difficulty</option>
+        <option>easy</option>
+        <option>medium</option>
+        <option>hard</option>
+      </select>
+      <span>questions from the following categories: </span>
+      <load-spinner v-if="showLoading"></load-spinner>
+      <select v-if="categories" v-model="currentCategory">
+        <option v-for="category in categories" :value="category.id"
+        :key="category.id">{{category.name}}</option>
+      </select>
+      <form v-on:submit.prevent="getQuestions">
+        <p>You've chosen to answer {{numQuestions}} {{difficulty}}
+      questions from the: <br> {{getCatNameFromId}} category.</p>
+        <transition name="bounce"
+        enter-active-class="bounce-enter-active"
+        leave-active-class="bounce-leave-active">
+          <v-btn block large v-if="ready" type="submit">Play now!</v-btn>
+        </transition>
+      </form>
+    </div>
     <ul v-if="errors.length > 0" class="errors">
       <li v-for="error of errors" :key='error.id'>
         {{error.message}}
@@ -102,56 +104,52 @@ export default {
     }
   },
   methods: {
+    shuffle: function(arr) {
+      var currentIndex = arr.length,
+        temporaryValue,
+        randomIndex;
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = arr[currentIndex];
+        arr[currentIndex] = arr[randomIndex];
+        arr[randomIndex] = temporaryValue;
+      }
+      return arr;
+    },
     getQuestions: function (event) {
       let category = this.currentCategory
       let difficulty = this.difficulty
       let numQuestions = this.numQuestions
   
-      axios.get(`https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}&type=multiple`)
+      axios
+        .get(
+          `https://opentdb.com/api.php?type=multiple&amount=${numQuestions}&category=${category}&difficulty=${difficulty}`
+        )
         .then(response => {
-          this.questions = response.data.results
-          this.startGame();
+          this.questions = response.data.results;
+          // this.startGame();
+          console.log("startGame");
+          this.quizQuestions = [];
+          for (let i = 0; i < this.questions.length; i++) {
+            let correctAnswer = this.questions[i].correct_answer;
+            let temp = this.questions[i].incorrect_answers;
+            temp.push(correctAnswer);
+            temp = this.shuffle(temp);
+            this.quizQuestions.push({
+              correctAnswer: correctAnswer,
+              allAnswers: temp,
+              question: this.questions[i]
+            });
+          }
         })
         .catch(error => {
-          this.errors.push(error)
-        })
+          this.errors.push(error);
+      });
     },
-    startGame: () => {
-          // Set questions to payload from http request in startGame action
-          // this.questions.results = questions.results;
-          // Create list of incorrect choices
-          console.log("startGame");
-          let q = this.questions;
-          // this.questions.results.forEach(el => {
-          //   el.choices = el.incorrect_answers.reduce((acc, item) => {
-          //     acc.push({
-          //       text: item,
-          //       answer: false,
-          //       classes: {
-          //         incorrect: false
-          //       }
-          //     });
-          //     return acc;
-          //   }, []);
-          //   // Add correct answer
-          //   el.choices.push({
-          //     text: el.correct_answer,
-          //     answer: true,
-          //     classes: {
-          //       correct: false,
-          //     }
-          //   });
-          //   // Shuffle choices
-          //   let i = el.choices.length, temp, rand;
-          //   while (0 !== i) {
-          //     rand = Math.floor(Math.random() * i);
-          //     i -= 1;
-          //     temp = el.choices[i];
-          //     el.choices[i] = el.choices[rand];
-          //     el.choices[rand] = temp;
-          //   }
-          // });
-    }
   },
   computed: {
     getCatNameFromId: function () {
@@ -166,8 +164,13 @@ export default {
       if (this.difficulty && this.numQuestions && this.currentCategory) {
         return true
       }
-    }
-  }
+    },
+    playing: function () {
+      if (this.questions != null && this.questions.length > 0) {
+        return true;
+      }
+    },
+  },
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
