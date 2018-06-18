@@ -41,7 +41,7 @@
 
           <ul id="answers">
             <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
-              <input type="radio" id="(answer,aIndex)" v-bind:value="answer" v-model="answer.picked">
+              <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="answer.picked">
               <label for="answer" v-html="answer"></label>
             </li>
           </ul> 
