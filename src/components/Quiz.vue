@@ -33,37 +33,30 @@
         {{error.message}}
       </li>
     </ul>
-    <div v-if="questions != null && questions.length > 0">
-      <!-- <p>hello</p> -->
-      <li v-for="(questionObj,index) in questions" v-bind:key="index">
-      <!-- <label> -->
-        <!-- The radio button has three new directives -->
-        <!-- v-bind:value sets "value" to "true" if the response is correct -->
-        <!-- v-bind:name sets "name" to question index to group answers by question -->
-        <!-- v-model creates binding with userResponses -->
-        <div>
-          <label v-html="questionObj.question"></label>
-          <input type="text"> 
-        </div>
-        <!-- <input type="radio" 
-              v-bind:value="question.correct" 
-              v-bind:name="index" 
-              v-model="userResponses[index]"> {{question.text}}> -->
-      <!-- </label> -->
+     <div v-if="playing">
+      <li v-for="(questionObj,index) in quizQuestions" v-bind:key="index">
+  
+        <p class="questions" v-html="questionObj.question.question"></p>
+
+        <ul id="answers">
+          <li class="answers" v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
+            <input type="radio" v-bind:value="answer" v-model="picked" >
+            <label for="answer" v-html="answer"></label>
+          </li>
+        </ul> 
     </li>
+    </div>
     </div>
   </div>
 </template>
 <script>
 import {API} from '@/common/api'
 import CubeSpinner from '@/components/CubeSpinner'
-// import Questions from '@/components/Questions'
 import axios from 'axios'
 require('vue2-animate/dist/vue2-animate.min.css')
 export default {
   name: 'Quiz',
   components: {
-    // 'Questions': Questions,
     'load-spinner': CubeSpinner
   },
   data () {
@@ -71,7 +64,8 @@ export default {
       categories: null,
       currentCategory: 9, // default to random category
       difficulty: '',
-      questions: null, // current list of game questions
+      questions: null, // current list of game questions 
+      quizQuestions: null,
       numQuestions: 0,
       currentQuestion: 0,
       messages: [],
@@ -175,6 +169,10 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.questions {
+  font-weight: 700;
+}
+
 h1, h2 {
   font-weight: normal;
 }
