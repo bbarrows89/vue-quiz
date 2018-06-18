@@ -39,8 +39,10 @@
         <!-- v-bind:value sets "value" to "true" if the response is correct -->
         <!-- v-bind:name sets "name" to question index to group answers by question -->
         <!-- v-model creates binding with userResponses -->
-        <label>{{questionObj.question}}</label>
-        <input type="text"> 
+        <div>
+          <label v-html="questionObj.question"></label>
+          <input type="text"> 
+        </div>
         <!-- <input type="radio" 
               v-bind:value="question.correct" 
               v-bind:name="index" 
@@ -178,7 +180,7 @@ ul {
   padding: 0;
 }
 li {
-  display: inline-block;
+  display: block;
   margin: 0 10px;
 }
 a {
