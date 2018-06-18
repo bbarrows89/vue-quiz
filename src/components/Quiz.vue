@@ -33,10 +33,10 @@
         {{error.message}}
       </li>
     </ul>
-     <div v-if="playing">
+    <div v-if="playing">
       <li v-for="(questionObj,index) in quizQuestions" v-bind:key="index">
   
-        <p class="questions" v-html="questionObj.question.question"></p>
+        <p class="questions" v-html="questionObj.question.question"> </p>
 
         <ul id="answers">
           <li class="answers" v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
@@ -44,8 +44,7 @@
             <label for="answer" v-html="answer"></label>
           </li>
         </ul> 
-    </li>
-    </div>
+      </li>
     </div>
   </div>
 </template>
