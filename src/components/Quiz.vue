@@ -37,6 +37,7 @@
 <script>
 import {API} from '@/common/api'
 import CubeSpinner from '@/components/CubeSpinner'
+import Questions from '@/components/Questions'
 import axios from 'axios'
 require('vue2-animate/dist/vue2-animate.min.css')
 

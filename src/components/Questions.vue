@@ -50,7 +50,7 @@ export default {
               classes: {
                 correct: false,
               }
-            });
+            })
             // Shuffle choices
             let i = el.choices.length, temp, rand;
             while (0 !== i) {
@@ -60,7 +60,7 @@ export default {
               el.choices[i] = el.choices[rand];
               el.choices[rand] = temp;
             }
-          });
+          })
     }
   }
 }
