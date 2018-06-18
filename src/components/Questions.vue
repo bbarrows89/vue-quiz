@@ -1,8 +1,7 @@
 <template>
   <div>
-    <li v-for="response in question.responses">
+    <li v-for="question in questions">
       <label>
-        <!-- The radio button has three new directives -->
         <!-- v-bind:value sets "value" to "true" if the response is correct -->
         <!-- v-bind:name sets "name" to question index to group answers by question -->
         <!-- v-model creates binding with userResponses -->

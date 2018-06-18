@@ -31,20 +31,35 @@
         {{error.message}}
       </li>
     </ul>
+    <div v-if="questions != null && questions.length > 0">
+      <!-- <p>hello</p> -->
+      <li v-for="(questionObj,index) in questions" v-bind:key="index">
+      <!-- <label> -->
+        <!-- The radio button has three new directives -->
+        <!-- v-bind:value sets "value" to "true" if the response is correct -->
+        <!-- v-bind:name sets "name" to question index to group answers by question -->
+        <!-- v-model creates binding with userResponses -->
+        <label>{{questionObj.question}}</label>
+        <input type="text"> 
+        <!-- <input type="radio" 
+              v-bind:value="question.correct" 
+              v-bind:name="index" 
+              v-model="userResponses[index]"> {{question.text}}> -->
+      <!-- </label> -->
+    </li>
+    </div>
   </div>
 </template>
-
 <script>
 import {API} from '@/common/api'
 import CubeSpinner from '@/components/CubeSpinner'
-import Questions from '@/components/Questions'
+// import Questions from '@/components/Questions'
 import axios from 'axios'
 require('vue2-animate/dist/vue2-animate.min.css')
-
 export default {
   name: 'Quiz',
   components: {
-    'Questions': Questions,
+    // 'Questions': Questions,
     'load-spinner': CubeSpinner
   },
   data () {
@@ -52,7 +67,7 @@ export default {
       categories: null,
       currentCategory: 9, // default to random category
       difficulty: '',
-      questions: [], // current list of game questions
+      questions: null, // current list of game questions
       numQuestions: 0,
       currentQuestion: 0,
       messages: [],
@@ -89,53 +104,52 @@ export default {
       let category = this.currentCategory
       let difficulty = this.difficulty
       let numQuestions = this.numQuestions
-
-      axios.get(`https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}`)
+  
+      axios.get(`https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}&type=multiple`)
         .then(response => {
-          this.questions = response.data
-          startGame(this.questions);
+          this.questions = response.data.results
+          this.startGame();
         })
         .catch(error => {
           this.errors.push(error)
         })
     },
-
-    startGame: (questions) => {
+    startGame: () => {
           // Set questions to payload from http request in startGame action
-          this.questions.results = questions;
+          // this.questions.results = questions.results;
           // Create list of incorrect choices
-          this.questions.results.forEach(el => {
-            el.choices = el.incorrect_answers.reduce((acc, item) => {
-              acc.push({
-                text: item,
-                answer: false,
-                classes: {
-                  incorrect: false
-                }
-              });
-              return acc;
-            }, []);
-            // Add correct answer
-            el.choices.push({
-              text: el.correct_answer,
-              answer: true,
-              classes: {
-                correct: false,
-              }
-            });
-            // Shuffle choices
-            let i = el.choices.length, temp, rand;
-            while (0 !== i) {
-              rand = Math.floor(Math.random() * i);
-              i -= 1;
-              temp = el.choices[i];
-              el.choices[i] = el.choices[rand];
-              el.choices[rand] = temp;
-            }
-          });
+          console.log("startGame");
+          let q = this.questions;
+          // this.questions.results.forEach(el => {
+          //   el.choices = el.incorrect_answers.reduce((acc, item) => {
+          //     acc.push({
+          //       text: item,
+          //       answer: false,
+          //       classes: {
+          //         incorrect: false
+          //       }
+          //     });
+          //     return acc;
+          //   }, []);
+          //   // Add correct answer
+          //   el.choices.push({
+          //     text: el.correct_answer,
+          //     answer: true,
+          //     classes: {
+          //       correct: false,
+          //     }
+          //   });
+          //   // Shuffle choices
+          //   let i = el.choices.length, temp, rand;
+          //   while (0 !== i) {
+          //     rand = Math.floor(Math.random() * i);
+          //     i -= 1;
+          //     temp = el.choices[i];
+          //     el.choices[i] = el.choices[rand];
+          //     el.choices[rand] = temp;
+          //   }
+          // });
     }
-
-
   },
   computed: {
     getCatNameFromId: function () {
@@ -154,7 +168,6 @@ export default {
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
@@ -171,14 +184,12 @@ li {
 a {
   color: #42b983;
 }
-
 .bounce-enter-active {
   animation: bounce-in .5s;
 }
 .bounce-leave-active {
   animation: bounce-in .5s reverse;
 }
-
 @keyframes bounce-in {
   0% {
     transform: scale(0.5);
