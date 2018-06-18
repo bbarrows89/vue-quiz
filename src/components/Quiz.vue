@@ -93,15 +93,16 @@ export default {
       axios.get(`https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}`)
         .then(response => {
           this.questions = response.data
+          startGame(this.questions);
         })
         .catch(error => {
           this.errors.push(error)
         })
     },
 
-    startGame: (state, payload) => {
+    startGame: (questions) => {
           // Set questions to payload from http request in startGame action
-          this.questions.results = payload;
+          this.questions.results = questions;
           // Create list of incorrect choices
           this.questions.results.forEach(el => {
             el.choices = el.incorrect_answers.reduce((acc, item) => {
