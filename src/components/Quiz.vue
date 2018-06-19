@@ -153,7 +153,7 @@ export default {
       this.score = 0;
       for (let i = 0; i < this.numQuestions; i++) {
         if (this.userAnswers[i] === this.quizQuestions[i].correctAnswer) {
-          this.score =+ 1;
+          this.score++;
           console.log('score is ' + this.score);
         }
       }
