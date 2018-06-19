@@ -150,9 +150,9 @@ export default {
       });
     },
     checkAnswers: function(event) {
-      for (let i = 0; i < this.quizQuestions.length; i++) {
+      for (let i = 0; i < this.numQuestions; i++) {
         if (this.userAnswers[i] === this.quizQuestions[i].correctAnswer) {
-          score =+ 1;
+          this.score =+ 1;
           console.log('score is ' + this.score);
         }
       }
