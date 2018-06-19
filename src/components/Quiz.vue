@@ -42,8 +42,8 @@
           <ul id="answers">
             <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
               <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="userAnswers[index]">
-              <label for="answer" :class="{correct: isCorrect[index] && gameOver,
-               incorrect:!isCorrect[index] && gameOver}" v-html="answer"></label>
+              <label for="answer" :class="{correct: isCorrect[`${index}`] && gameOver,
+               incorrect:!isCorrect[`${index}`] && gameOver}" v-html="answer"></label>
             </li>
           </ul> 
         </li>
@@ -77,6 +77,7 @@ export default {
       messages: [],
       showLoading: false, // flag for showing CubeSpinner while loading
       isCorrect: [],
+      gameOver: false,
       errors: [],
       score: 0,
     }
@@ -161,6 +162,7 @@ export default {
         if (this.userAnswers[i] === this.quizQuestions[i].correctAnswer) {
           this.score++;
           this.isCorrect[i] = true;
+          this.gameOver = true;
           console.log('score is ' + this.score);
         }
       }
@@ -190,11 +192,6 @@ export default {
         return true;
       }
     },
-    gameOver: function () {
-      if (this.score) {
-        return true;
-      }
-    }
   },
 }
 </script>
