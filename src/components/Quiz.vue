@@ -42,14 +42,14 @@
           <ul id="answers">
             <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
               <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="userAnswers[index]">
-              <label for="answer" v-html="answer"></label>
+              <label for="answer" :class="{correct: isCorrect[i], incorrect:!isCorrect[i]}" v-html="answer"></label>
             </li>
           </ul> 
         </li>
         <button id="checkAnswers" type="submit">Check Answers!</button>
       </form>
     </div>
-   <!-- <div v-if="></div> will need to display score here once answers checked -->
+   <p v-if="score" id="score">Your score is {{score}} out of {{numQuestions}}!</p>
   </div>
 </template>
 <script>
@@ -73,6 +73,7 @@ export default {
       userAnswers: [],
       messages: [],
       showLoading: false, // flag for showing CubeSpinner while loading
+      isCorrect: [],
       errors: [],
       score: 0,
     }
@@ -151,9 +152,12 @@ export default {
     },
     checkAnswers: function(event) {
       this.score = 0;
+      this.isCorrect = [];
       for (let i = 0; i < this.numQuestions; i++) {
+        this.isCorrect[i] = false;
         if (this.userAnswers[i] === this.quizQuestions[i].correctAnswer) {
           this.score++;
+          this.isCorrect[i] = true;
           console.log('score is ' + this.score);
         }
       }
@@ -190,6 +194,13 @@ export default {
   font-size: 175%;
   background-color:dodgerblue;
   color: white;
+}
+.correct {
+  color: green;
+}
+.incorrect {
+  color: red;
+  text-decoration: strikethrough grey;
 }
 h1, h2 {
   font-weight: normal;
