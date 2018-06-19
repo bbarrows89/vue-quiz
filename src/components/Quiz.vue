@@ -41,7 +41,7 @@
 
           <ul id="answers">
             <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
-              <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="answer.picked">
+              <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="userAnswers[index]">
               <label for="answer" v-html="answer"></label>
             </li>
           </ul> 
@@ -70,6 +70,7 @@ export default {
       questions: null, // current list of game questions 
       quizQuestions: null,
       numQuestions: 0,
+      userAnswers: [],
       messages: [],
       showLoading: false, // flag for showing CubeSpinner while loading
       errors: [],
@@ -149,9 +150,10 @@ export default {
       });
     },
     checkAnswers: function(event) {
-      for (let i = 0; i < numQuestions; i++) {
-        if (this.quizQuestions[i].picked === quizQuestions[i].correctAnswer) {
+      for (let i = 0; i < this.quizQuestions.length; i++) {
+        if (this.userAnswers[i] === this.quizQuestions[i].correctAnswer) {
           score =+ 1;
+          console.log('score is ' + this.score);
         }
       }
     }
