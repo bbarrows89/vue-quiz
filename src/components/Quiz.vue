@@ -37,13 +37,13 @@
       <form v-on:submit.prevent="checkAnswers">
         <li v-for="(questionObj,index) in quizQuestions" v-bind:key="index">
     
-          <p class="questions" v-html="questionObj.question.question"> </p>
+          <p class="questions" :class="{correct: isCorrect[`${index}`] && gameOver,
+               incorrect:!isCorrect[`${index}`] && gameOver}" v-html="questionObj.question.question"> </p>
 
           <ul id="answers">
             <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
               <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="userAnswers[index]">
-              <label for="answer" :class="{correct: isCorrect[`${index}`] && gameOver,
-               incorrect:!isCorrect[`${index}`] && gameOver}" v-html="answer"></label>
+              <label for="answer" v-html="answer"></label>
             </li>
           </ul> 
         </li>
