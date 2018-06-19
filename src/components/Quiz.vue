@@ -42,7 +42,8 @@
           <ul id="answers">
             <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
               <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="userAnswers[index]">
-              <label for="answer" :class="{correct: isCorrect[`${aIndex}`] && gameOver, incorrect:!isCorrect[`${aIndex}`] && gameOver}" v-html="answer"></label>
+              <label for="answer" :class="{correct: isCorrect[index] && gameOver,
+               incorrect:!isCorrect[index] && gameOver}" v-html="answer"></label>
             </li>
           </ul> 
         </li>
