@@ -151,6 +151,7 @@ export default {
     },
     checkAnswers: function(event) {
       for (let i = 0; i < this.numQuestions; i++) {
+        this.score = 0;
         if (this.userAnswers[i] === this.quizQuestions[i].correctAnswer) {
           this.score =+ 1;
           console.log('score is ' + this.score);
