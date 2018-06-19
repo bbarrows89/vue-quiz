@@ -56,7 +56,9 @@
 import {API} from '@/common/api'
 import CubeSpinner from '@/components/CubeSpinner'
 import axios from 'axios'
+import swal from 'sweetalert2';
 require('vue2-animate/dist/vue2-animate.min.css')
+
 export default {
   name: 'Quiz',
   components: {
@@ -161,6 +163,11 @@ export default {
           console.log('score is ' + this.score);
         }
       }
+      swal(
+        'Good job!',
+        'Your score was ' + this.score + ' out of ' + this.numQuestions,
+        'success'
+      )
     }
   },
   computed: {
