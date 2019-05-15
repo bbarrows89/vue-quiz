@@ -7,70 +7,85 @@
         <option v-for="n in 20" :value="n" :key="n">{{n}}</option>
       </select>
       <select v-model="difficulty">
-        <option selected disabled value="">Select a difficulty</option>
+        <option selected disabled value>Select a difficulty</option>
         <option>easy</option>
         <option>medium</option>
         <option>hard</option>
       </select>
-      <span>questions from the following categories: </span>
+      <span>questions from the following categories:</span>
       <load-spinner v-if="showLoading"></load-spinner>
       <select v-if="categories" v-model="currentCategory">
-        <option v-for="category in categories" :value="category.id"
-        :key="category.id">{{category.name}}</option>
+        <option
+          v-for="category in categories"
+          :value="category.id"
+          :key="category.id"
+        >{{category.name}}</option>
       </select>
       <form v-on:submit.prevent="getQuestions">
-        <p>You've chosen to answer {{numQuestions}} {{difficulty}}
-      questions from the: <br> {{getCatNameFromId}} category.</p>
-        <transition name="bounce"
-        enter-active-class="bounce-enter-active"
-        leave-active-class="bounce-leave-active">
+        <p>
+          You've chosen to answer {{numQuestions}} {{difficulty}}
+          questions from the:
+          <br>
+          {{getCatNameFromId}} category.
+        </p>
+        <transition
+          name="bounce"
+          enter-active-class="bounce-enter-active"
+          leave-active-class="bounce-leave-active"
+        >
           <v-btn block large v-if="ready" type="submit">Play now!</v-btn>
         </transition>
       </form>
     </div>
     <ul v-if="errors.length > 0" class="errors">
-      <li v-for="error of errors" :key='error.id'>
-        {{error.message}}
-      </li>
+      <li v-for="error of errors" :key="error.id">{{error.message}}</li>
     </ul>
     <div v-if="playing">
       <form v-on:submit.prevent="checkAnswers">
         <li v-for="(questionObj,index) in quizQuestions" v-bind:key="index">
-    
-          <p class="questions" :class="{correct: isCorrect[`${index}`] && gameOver,
-               incorrect:!isCorrect[`${index}`] && gameOver}" v-html="questionObj.question.question"> </p>
+          <p
+            class="questions"
+            :class="{correct: isCorrect[`${index}`] && gameOver,
+               incorrect:!isCorrect[`${index}`] && gameOver}"
+            v-html="questionObj.question.question"
+          ></p>
 
           <ul id="answers">
             <li v-for="(answer,aIndex) in questionObj.allAnswers" v-bind:key="aIndex">
-              <input type="radio" :name="`q${index}`" v-bind:value="answer" v-model="userAnswers[index]">
+              <input
+                type="radio"
+                :name="`q${index}`"
+                v-bind:value="answer"
+                v-model="userAnswers[index]"
+              >
               <label for="answer" v-html="answer"></label>
             </li>
-          </ul> 
+          </ul>
         </li>
         <button id="checkAnswers" type="submit">Check Answers!</button>
       </form>
     </div>
-   <p v-if="score" id="score">Your score is {{score}} out of {{numQuestions}}!</p>
+    <p v-if="score" id="score">Your score is {{score}} out of {{numQuestions}}!</p>
   </div>
 </template>
 <script>
-import {API} from '@/common/api'
-import CubeSpinner from '@/components/CubeSpinner'
-import axios from 'axios'
-import swal from 'sweetalert2';
-require('vue2-animate/dist/vue2-animate.min.css')
+import { API } from "@/common/api";
+import CubeSpinner from "@/views/CubeSpinner";
+import axios from "axios";
+import swal from "sweetalert2";
+require("vue2-animate/dist/vue2-animate.min.css");
 
 export default {
-  name: 'Quiz',
+  name: "Quiz",
   components: {
-    'load-spinner': CubeSpinner
+    "load-spinner": CubeSpinner
   },
-  data () {
+  data() {
     return {
       categories: null,
       currentCategory: 9, // default to random category
-      difficulty: '',
-      questions: null, // current list of game questions 
+      difficulty: "",
+      questions: null, // current list of game questions
       quizQuestions: null,
       numQuestions: 0,
       userAnswers: [],
@@ -79,31 +94,31 @@ export default {
       isCorrect: [],
       gameOver: false,
       errors: [],
-      score: 0,
-    }
+      score: 0
+    };
   },
-  created () {
+  created() {
     // check to see if user has trivia categories cached.
-    if (this.$ls.get('categories')) {
-      console.log('Cached categories found.')
-      this.categories = this.$ls.get('categories')
+    if (this.$ls.get("categories")) {
+      console.log("Cached categories found.");
+      this.categories = this.$ls.get("categories");
     } else {
-      console.log('No cache available. Making API call')
-      this.showLoading = true
-      API.get('https://opentdb.com/api_category.php')
+      console.log("No cache available. Making API call");
+      this.showLoading = true;
+      API.get("https://opentdb.com/api_category.php")
         .then(response => {
-          this.$ls.set('categories', response.data.trivia_categories)
-          console.log('Categories have been retrieved and cached.')
-          this.categories = response.data.trivia_categories
-          this.showLoading = false
+          this.$ls.set("categories", response.data.trivia_categories);
+          console.log("Categories have been retrieved and cached.");
+          this.categories = response.data.trivia_categories;
+          this.showLoading = false;
         })
         .catch(error => {
           this.messages.push({
-            type: 'error',
+            type: "error",
             text: error.message
-          })
-          this.showLoading = false
-        })
+          });
+          this.showLoading = false;
+        });
     }
   },
   methods: {
@@ -123,11 +138,11 @@ export default {
       }
       return arr;
     },
-    getQuestions: function (event) {
-      let category = this.currentCategory
-      let difficulty = this.difficulty
-      let numQuestions = this.numQuestions
-  
+    getQuestions: function(event) {
+      let category = this.currentCategory;
+      let difficulty = this.difficulty;
+      let numQuestions = this.numQuestions;
+
       axios
         .get(
           `https://opentdb.com/api.php?type=multiple&amount=${numQuestions}&category=${category}&difficulty=${difficulty}`
@@ -152,7 +167,7 @@ export default {
         })
         .catch(error => {
           this.errors.push(error);
-      });
+        });
     },
     checkAnswers: function(event) {
       this.score = 0;
@@ -163,37 +178,37 @@ export default {
           this.score++;
           this.isCorrect[i] = true;
           this.gameOver = true;
-          console.log('score is ' + this.score);
+          console.log("score is " + this.score);
         }
       }
       swal(
-        'Good job!',
-        'Your score was ' + this.score + ' out of ' + this.numQuestions,
-        'success'
-      )
+        "Good job!",
+        "Your score was " + this.score + " out of " + this.numQuestions,
+        "success"
+      );
     }
   },
   computed: {
-    getCatNameFromId: function () {
-      console.log('currrent category: ' + this.currentCategory)
-      let searchId = this.currentCategory
-      let found = this.categories.find(function (element) {
-        return element.id === searchId
-      })
-      return found.name
+    getCatNameFromId: function() {
+      console.log("currrent category: " + this.currentCategory);
+      let searchId = this.currentCategory;
+      let found = this.categories.find(function(element) {
+        return element.id === searchId;
+      });
+      return found.name;
     },
-    ready: function () {
+    ready: function() {
       if (this.difficulty && this.numQuestions && this.currentCategory) {
-        return true
-      }
-    },
-    playing: function () {
-      if (this.questions != null && this.questions.length > 0) {
         return true;
       }
     },
-  },
-}
+    playing: function() {
+      if (this.questions != null && this.questions.length > 0) {
+        return true;
+      }
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -202,7 +217,7 @@ export default {
 }
 #checkAnswers {
   font-size: 175%;
-  background-color:dodgerblue;
+  background-color: dodgerblue;
   color: white;
 }
 .correct {
@@ -212,7 +227,8 @@ export default {
   color: red;
   text-decoration: line-through grey;
 }
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {
@@ -227,10 +243,10 @@ a {
   color: #42b983;
 }
 .bounce-enter-active {
-  animation: bounce-in .5s;
+  animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
-  animation: bounce-in .5s reverse;
+  animation: bounce-in 0.5s reverse;
 }
 @keyframes bounce-in {
   0% {
